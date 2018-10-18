@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+<header>
+    <% include ../partials/welcome-header %>
+</header>
+
+<main>
+    <div class="jumbotron">
+        <h1>Welcome</h1>
+        <p>Please vote as per your choices</p>
+        <ol type="1">
+        <% questions.forEach(function(item,i){%>
+            <form class="form-horizontal" action="/getresponses" method="POST">
+            <li><%=item.question %></li>
+            <ol type="a">
+                <input type="text" name="question" value="<%=item.question%>" hidden>
+            <% item.answers.forEach(function(ans){%>
+                <li>
+                    <input type="radio" id="checked_responses" name="chosenResponse<%=i%>" value=<%=ans.con%>><%=ans.con%></option>&nbsp;&nbsp;<%=ans.votes%>
+                </li>
+             <%})%>
+            </ol>
+            Define your own response<input type="text" name="customResponse<%=i%>" placeholder="Your response" >
+            <%})%>
+            <br><br>
+            <input type="submit" value="Submit Your Response">
+        </form>  
+            </ol>
+    </div>
+</main>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+</html>

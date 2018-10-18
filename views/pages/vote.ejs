@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+<header>
+    <% include ../partials/welcome-header %>
+</header>
+
+<main>
+    <div class="jumbotron">
+        <h1>Welcome</h1>
+        <p>The current scenario is:</p>
+        <ol type="1">
+        <% questions.forEach(function(item,i){%>
+            <li><%=item.question %></li>
+            <ol type="a">
+            <% item.answers.forEach(function(ans){%>
+                <li>
+                    <%=ans.con%></option>&nbsp;&nbsp;<%=ans.votes%>
+                </li>
+             <%})%>
+            </ol>
+            <%})%>
+            </ol>
+    </div>
+</main>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+</html>
