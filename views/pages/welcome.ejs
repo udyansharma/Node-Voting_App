@@ -15,17 +15,21 @@
         <p>Please vote as per your choices</p>
         <ol type="1">
         <% questions.forEach(function(item,i){%>
-            <form class="form-horizontal" action="/getresponses" method="POST">
+            <form class="form-horizontal" action="/getresponses" method="POST" name="response_form">
             <li><%=item.question %></li>
             <ol type="a">
                 <input type="text" name="question" value="<%=item.question%>" hidden>
             <% item.answers.forEach(function(ans){%>
                 <li>
-                    <input type="radio" id="checked_responses" name="chosenResponse<%=i%>" value=<%=ans.con%>><%=ans.con%></option>&nbsp;&nbsp;<%=ans.votes%>
+                    <div id="chosen_div">
+                    <input type="radio" id="chosen_responses" onclick="return manage_fields()" name="chosenResponse<%=i%>" value=<%=ans.con%>><%=ans.con%></option>&nbsp;&nbsp;<%=ans.votes%>
+                    </div>
                 </li>
              <%})%>
             </ol>
-            Define your own response<input type="text" name="customResponse<%=i%>" placeholder="Your response" >
+            <div id="custom_div">
+            Define your own response<input type="text" oninput="return manage_fields()" id="custom_responses" name="customResponse<%=i%>" placeholder="Your response" >
+            </div>
             <%})%>
             <br><br>
             <input type="submit" value="Submit Your Response">
@@ -33,10 +37,31 @@
             </ol>
     </div>
 </main>
-
+    <script type="text/javascript">
+    function manage_fields(){
+        
+        console.log("HERE IN MANAGE_FIELDS");
+        var chosen_response_div=document.getElementById('chosen_div').children;
+        console.log('chosen_response',chosen_response_div);
+        var custom_response_div=document.getElementById('custom_div').children;
+        console.log('chosen_response_div',custom_response_div);
+        for(var i=0;i<chosen_response_div.length;i++){
+            for(var j=0;j<chosen_response_div[i].length;j++){
+                if(chosen_response_div[i][j].checked){
+                    custom_response_div[i].value="";
+                    custom_response_div[i].display=none;
+                }
+                if(custom_response_div[i].value!=""){
+                    chosen_response_div[i][j].checked=false;
+                    chosen_response_div[i][j].display=none;
+                    custom_response_div[i].disabled=false;
+                }
+            }
+        }
+    }
+    </script>
 <footer>
     <% include ../partials/footer %>
 </footer>
-
 </body>
 </html>

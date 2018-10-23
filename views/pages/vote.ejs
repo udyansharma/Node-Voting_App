@@ -14,12 +14,12 @@
         <h1>Welcome</h1>
         <p>The current scenario is:</p>
         <ol type="1">
-        <% questions.forEach(function(item,i){%>
-            <li><%=item.question %></li>
+        <% responses.forEach(function(item,i){%>
+            <li><%=item.user %></li>
             <ol type="a">
-            <% item.answers.forEach(function(ans){%>
+            <% item.question.forEach(function(ans,j){%>
                 <li>
-                    <%=ans.con%></option>&nbsp;&nbsp;<%=ans.votes%>
+                    item.response&nbsp;&nbsp;<%= ans%> 
                 </li>
              <%})%>
             </ol>
