@@ -3,6 +3,7 @@ var mongoDB='mongodb://127.0.0.1/votingdb';
 mongoose.connect(mongoDB);
 const User = require('../models/User.js');
 const Ques= require('../models/Question.js');
+const Responses= require('../models/Responses.js');
 
 const insertUser= (email,password,callback)=>{
     const u1=new User({email:email,password:password,state:false});
@@ -61,12 +62,36 @@ const updateVotes=(question,vote)=>{
       console.log("vote",vote)
       var search_query={question:question,'answers.con':vote}
       console.log("search",search_query)
-        Ques.updateOne(search_query,{$inc:{'answers.$.votes':1}},function(err,msg){
-            if(err)
-             reject(err)
-            else
-             resolve(msg)
+        Ques.updateOne(search_query,{$inc:{'answers.$.votes':1}},function(err1,msg1){
+            if(err1)
+             reject(err1)
+            else{
+                resolve(msg1);
+            }
         })
+    });
+}
+const updateResponses=(user,question,vote)=>{
+    return new Promise(function(resolve,reject){
+       
+        if(Responses.findOne({user:user})){
+            Responses.updateOne({user:user},{$push:{'question':question,'response':vote}},function(err,msg){
+                if(msg)
+                    resolve(msg)
+                else
+                    reject(err)
+            });
+        }
+        else{
+            console.log("inserting first one in here");
+            console.log("The question "+question);
+            Responses.insertOne({user:user,question:question,response:vote},function(err,msg){
+                if(msg)
+                    resolve(msg)
+                else
+                    reject(err)
+            });
+        }
     })
 }
 const insertnewResponse=(question,vote)=>{
@@ -80,10 +105,22 @@ const insertnewResponse=(question,vote)=>{
         })
     })
 }
-    
+const getUserResponses=()=>{
+    return new Promise(function(resolve,reject){
+        
+        Responses.find({},function(err,data){
+            if(!err)
+                resolve(data);
+            else
+                reject(err);
+        });
+    })
+}    
 exports.insertUser = insertUser;
 exports.findUser = findUser;
 exports.getQuestion= getQuestion;
 exports.authenticateUser= authenticateUser;
 exports.updateVotes= updateVotes;
 exports.insertnewResponse= insertnewResponse;
+exports.getUserResponses=getUserResponses;
+exports.updateResponses=updateResponses;
